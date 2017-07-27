@@ -1,23 +1,40 @@
 package jonathan.balljumper;
 
+import android.graphics.Point;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-
-import jonathan.balljumper.engine.GameEngine;
-import jonathan.balljumper.views.PlayerView;
+import android.view.Window;
+import android.view.WindowManager;
 
 public class MainActivity extends AppCompatActivity {
 
-    private GameEngine gameEngine;
-    private PlayerView playerView;
+    private GameSurfaceView gameSurfaceView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
 
-        gameEngine = new GameEngine();
-        playerView = (PlayerView)findViewById(R.id.playerView);
-        playerView.invalidate();
+        // Remove the title bar.
+        getSupportActionBar().hide();
+
+        // Make the game full screen.
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
+        // Initialize game view.
+        //setContentView(R.layout.activity_main);
+        gameSurfaceView = new GameSurfaceView(this);
+        setContentView(gameSurfaceView);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        gameSurfaceView.resume();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        gameSurfaceView.pause();
     }
 }
