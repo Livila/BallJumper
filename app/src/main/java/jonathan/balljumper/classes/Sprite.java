@@ -10,7 +10,7 @@ public class Sprite {
     protected int x, y, width, height;
     protected int directionX = 1;
     protected int directionY = 1;
-    protected int speed = 10;
+    protected int speed = 0;
     protected int color = 0;
     protected Bitmap image;
 

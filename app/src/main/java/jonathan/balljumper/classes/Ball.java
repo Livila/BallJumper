@@ -5,24 +5,33 @@ package jonathan.balljumper.classes;
  */
 
 public class Ball extends Sprite {
-    private float radius;
+    private int radius;
 
-    public Ball(int x, int y, float radius, int color) {
-        super(x, y);
+    public Ball(int x, int y, int radius, int color) {
+        super(x, y, radius * 2, radius * 2);
         this.radius = radius;
         setColor(color);
+        setSpeed(8);
     }
 
     public void bounce() {
         // Simple bounce.
-        setY(getY() * -1);
+        setDirectionY(getDirectionY() * -1);
     }
 
-    public float getRadius() {
+    public int getRadius() {
         return radius;
     }
 
-    public void setRadius(float radius) {
+    public void setRadius(int radius) {
         this.radius = radius;
+    }
+
+    public int getTop() {
+        return getY() - getRadius();
+    }
+
+    public int getBottom() {
+        return getY() + getRadius();
     }
 }

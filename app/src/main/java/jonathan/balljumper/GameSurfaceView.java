@@ -102,7 +102,13 @@ public class GameSurfaceView extends SurfaceView implements Runnable {
      */
     protected void update() {
         // Game mechanics
-        ball.setY(ball.getY() + ball.getSpeed());
+        if (ball.getBottom() >= screenSize.y) {
+            ball.bounce();
+        } else if (ball.getTop() <= 0) {
+            ball.bounce();
+        }
+
+        ball.setY(ball.getY() + ball.getSpeed() * ball.getDirectionY());
     }
 
     /**
@@ -145,7 +151,7 @@ public class GameSurfaceView extends SurfaceView implements Runnable {
             int sleepTime = (int) (FRAME_PERIOD - deltaTime);
             if (sleepTime > 0) {
                 try {
-                    gameThread.sleep(sleepTime);
+                    gameThread.sleep(sleepTime / 2);
                 }
                 catch (InterruptedException e) {
                 }
