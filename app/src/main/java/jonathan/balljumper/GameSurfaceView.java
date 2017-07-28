@@ -15,6 +15,8 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
+import java.util.Random;
+
 import jonathan.balljumper.classes.Ball;
 import jonathan.balljumper.classes.Panel;
 
@@ -70,6 +72,17 @@ public class GameSurfaceView extends SurfaceView implements Runnable {
 
         // Initialize all panels.
         panelList = new Panel[10];
+
+        int height = 0;
+        Random random = new Random();
+
+        int panelWidth = 100;
+        float px = random.nextInt(screenSize.x - panelWidth);
+        float py = height - random.nextInt(screenSize.y / 3);
+
+        for (int i = 0; i < panelList.length; ++i) {
+            panelList[i] = new Panel(px, py, px + panelWidth, 30, Color.GRAY);
+        }
     }
 
     /**
@@ -108,23 +121,41 @@ public class GameSurfaceView extends SurfaceView implements Runnable {
             ball.bounce();
         }
 
-        ball.setY(ball.getY() + ball.getSpeed() * ball.getDirection().x);
+        ball.setY(ball.getY() + ball.getSpeed() * ball.getDirection().y);
+
+
+        for (int i = 0; i < panelList.length; ++i) {
+            if (ball.getDirection().y == -1) {
+                panelList[i].setY(panelList[i].getY() + panelList[i].getSpeed());
+
+                // If panel is below check, erase...
+            }
+
+            if (ball.getBottom() > panelList[i].getTop()) {
+                if (ball.getX() > panelList[i].getX()) {
+                    ball.bounce();
+                }
+            }
+        }
     }
 
     /**
      * Render everything to the screen.
-     * @param canvas
+     * @param canvas Canvas to be used when rendering.
      */
     protected void render(Canvas canvas) {
         // Reset background
         canvas.drawColor(Color.GREEN);
 
         // Render ball
-        Paint p = new Paint();
-        ColorFilter filter = new LightingColorFilter(ball.getColor(), 0);
-        p.setColorFilter(filter);
-        p.setColor(ball.getColor());
-        canvas.drawCircle(ball.getX(), ball.getY(), ball.getRadius(), p);
+        ball.draw(canvas);
+
+        // Render panels
+        for (Panel panel : panelList) {
+            Paint pPanel = new Paint();
+            pPanel.setColor(panel.getColor());
+            canvas.drawRect(panel.getX(), panel.getY(), panel.getWidth(), panel.getHeight() + panel.getY(), pPanel);
+        }
     }
 
     @Override

@@ -74,6 +74,14 @@ public class Sprite {
         this.height = height;
     }
 
+    public float getTop() {
+        return y - height / 2;
+    }
+
+    public float getBottom() {
+        return y + height / 2;
+    }
+
     public Point getDirection() {
         return direction;
     }
