@@ -1,100 +1,92 @@
 package jonathan.balljumper.classes;
 
 import android.graphics.Bitmap;
+import android.graphics.Point;
 
 /**
  * Created by Jonathan on 27/07/2017.
  */
 
 public class Sprite {
-    protected int x, y, width, height;
-    protected int directionX = 1;
-    protected int directionY = 1;
-    protected int speed = 0;
+    protected float x, y;
+    protected float width, height;
+    protected Point direction;
+    protected float speed = 0;
     protected int color = 0;
     protected Bitmap image;
 
-    public Sprite(int x, int y) {
+    public Sprite(float x, float y) {
         this.x = x;
         this.y = y;
+        direction = new Point(1, 1);
     }
 
-    public Sprite(int x, int y, int width, int height) {
+    public Sprite(float x, float y, float width, float height) {
         this(x, y);
         this.width = width;
         this.height = height;
     }
 
-    public Sprite(int x, int y, int width, int height, int color) {
+    public Sprite(float x, float y, float width, float height, int color) {
         this(x, y, width, height);
         this.color = color;
     }
 
-    public Sprite(int x, int y, Bitmap image) {
-        this(x, y);
+    public Sprite(float x, float y, Bitmap image) {
+        this(x, y, image.getWidth(), image.getHeight());
         this.image = image;
-        this.width = image.getWidth();
-        this.height = image.getHeight();
     }
 
-    public Sprite(int x, int y, Bitmap image, int color) {
+    public Sprite(float x, float y, Bitmap image, int color) {
         this(x, y, image);
         this.color = color;
     }
 
-    public int getX() {
+    public float getX() {
         return x;
     }
 
-    public void setX(int x) {
+    public void setX(float x) {
         this.x = x;
     }
 
-    public int getY() {
+    public float getY() {
         return y;
     }
 
-    public void setY(int y) {
+    public void setY(float y) {
         this.y = y;
     }
 
-    public int getWidth() {
+    public float getWidth() {
         return width;
     }
 
-    public void setWidth(int width) {
+    public void setWidth(float width) {
         this.width = width;
     }
 
-    public int getHeight() {
+    public float getHeight() {
         return height;
     }
 
-    public void setHeight(int height) {
+    public void setHeight(float height) {
         this.height = height;
     }
 
-    public int getDirectionX() {
-        return directionX;
+    public Point getDirection() {
+        return direction;
     }
 
-    public void setDirectionX(int directionX) {
-        this.directionX = directionX;
+    public void setDirection(Point direction) {
+        this.direction = direction;
     }
 
-    public int getDirectionY() {
-        return directionY;
-    }
-
-    public void setDirectionY(int directionY) {
-        this.directionY = directionY;
-    }
-
-    public int getSpeed() {
+    public float getSpeed() {
         return speed;
     }
 
-    public void setSpeed(int speed) {
+    public void setSpeed(float speed) {
         this.speed = speed;
     }
 

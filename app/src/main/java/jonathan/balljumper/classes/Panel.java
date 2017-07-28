@@ -7,7 +7,7 @@ import android.graphics.Paint;
  */
 
 public class Panel extends Sprite {
-    public Panel(int x, int y, int width, int height, int color) {
+    public Panel(float x, float y, int width, int height, int color) {
         super(x, y, width, height, color);
     }
 }

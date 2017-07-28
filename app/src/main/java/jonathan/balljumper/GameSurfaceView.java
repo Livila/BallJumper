@@ -11,12 +11,12 @@ import android.graphics.LightingColorFilter;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
+import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
 import jonathan.balljumper.classes.Ball;
 import jonathan.balljumper.classes.Panel;
-import jonathan.balljumper.classes.Sprite;
 
 /**
  * Created by Jonathan on 27/07/2017.
@@ -108,7 +108,7 @@ public class GameSurfaceView extends SurfaceView implements Runnable {
             ball.bounce();
         }
 
-        ball.setY(ball.getY() + ball.getSpeed() * ball.getDirectionY());
+        ball.setY(ball.getY() + ball.getSpeed() * ball.getDirection().x);
     }
 
     /**
@@ -161,5 +161,21 @@ public class GameSurfaceView extends SurfaceView implements Runnable {
                 sleepTime += FRAME_PERIOD;
             }
         }
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        super.onTouchEvent(event);
+
+        float x = event.getX();
+        float y = event.getY();
+
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_MOVE:
+                ball.setX(x);
+                break;
+        }
+
+        return true;
     }
 }
