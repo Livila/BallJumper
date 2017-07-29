@@ -6,19 +6,15 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.ColorFilter;
-import android.graphics.LightingColorFilter;
-import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
-import java.util.Random;
-
 import jonathan.balljumper.classes.Ball;
 import jonathan.balljumper.classes.Panel;
+import jonathan.balljumper.classes.PanelHandler;
 
 /**
  * Created by Jonathan on 27/07/2017.
@@ -32,7 +28,7 @@ public class GameSurfaceView extends SurfaceView implements Runnable {
     private Point screenSize;
 
     private Ball ball;
-    private Panel[] panelList;
+    private PanelHandler panelHandler;
 
     private final static int MAX_FPS = 40;
     private final static int FRAME_PERIOD = 1000 / MAX_FPS;
@@ -65,24 +61,13 @@ public class GameSurfaceView extends SurfaceView implements Runnable {
 
         // Initialize ball.
         int ballRadius = 35;
-        ball = new Ball(screenSize.x / 2 - ballRadius / 2,
+        ball = new Ball(screenSize.x / 2 - ballRadius,
                        (screenSize.y / 3) * 2 - ballRadius,
                         ballRadius,
                         Color.argb(255, 200, 34, 34));
 
-        // Initialize all panels.
-        panelList = new Panel[10];
-
-        int height = 0;
-        Random random = new Random();
-
-        int panelWidth = 150;
-        float px = random.nextInt(screenSize.x - panelWidth);
-        float py = height - random.nextInt(screenSize.y / 3);
-
-        for (int i = 0; i < panelList.length; ++i) {
-            panelList[i] = new Panel(px, py, panelWidth, 30, Color.GRAY);
-        }
+        // Initialize panelHandler.
+        panelHandler = new PanelHandler(10, screenSize);
     }
 
     /**
@@ -124,14 +109,21 @@ public class GameSurfaceView extends SurfaceView implements Runnable {
         ball.setY(ball.getY() + ball.getSpeed() * ball.getDirection().y);
 
 
-        for (int i = 0; i < panelList.length; ++i) {
+        for (int i = 0; i < panelHandler.getPanelList().length; ++i) {
+            Panel panel = panelHandler.getPanelList()[i];
+
             // When ball moves upwards, move panels down.
             if (ball.getDirection().y == -1) {
-                panelList[i].setY(panelList[i].getY() + panelList[i].getSpeed());
 
-                // If panel is below check, reset...
+                // If the panel is outside of the screen...
+                if (panel.getY() + panel.getSpeed() > screenSize.y) {
+                    panelHandler.resetPanel(i);
+                } else {
+                    // Move the panel down.
+                    panel.setY(panel.getY() + panel.getSpeed());
+                }
             } else {
-                if (ball.intersects(panelList[i].getX(), panelList[i].getY(), panelList[i].getWidth(), panelList[i].getHeight())) {
+                if (ball.intersects(panel.getX(), panel.getY(), panel.getWidth(), panel.getHeight())) {
                     ball.bounce();
                 }
             }
@@ -150,11 +142,7 @@ public class GameSurfaceView extends SurfaceView implements Runnable {
         ball.draw(canvas);
 
         // Render panels
-        for (Panel panel : panelList) {
-            Paint pPanel = new Paint();
-            pPanel.setColor(panel.getColor());
-            canvas.drawRect(panel.getX(), panel.getY(), panel.getWidth() + panel.getX(), panel.getHeight() + panel.getY(), pPanel);
-        }
+        panelHandler.draw(canvas);
     }
 
     @Override
