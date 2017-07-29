@@ -75,11 +75,19 @@ public class Sprite {
     }
 
     public float getTop() {
-        return y - height / 2;
+        return y;
     }
 
     public float getBottom() {
-        return y + height / 2;
+        return y + height;
+    }
+
+    public float getLeft() {
+        return x;
+    }
+
+    public float getRight() {
+        return x + width;
     }
 
     public Point getDirection() {
