@@ -12,7 +12,7 @@ import java.util.Random;
  */
 
 public class PanelHandler {
-    private final int panelFirstPosition = 400; // Y-position (pixel) of the first panel.
+    private final int panelFirstPosition = 1500; // Y-position (pixel) of the first panel.
 
     private int panelCount;
     private Point screenSize;

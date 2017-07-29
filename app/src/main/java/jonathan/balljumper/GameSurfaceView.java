@@ -64,7 +64,10 @@ public class GameSurfaceView extends SurfaceView implements Runnable {
         ball = new Ball(screenSize.x / 2 - ballRadius,
                        (screenSize.y / 3) * 2 - ballRadius,
                         ballRadius,
+                        0.4f,
                         Color.argb(255, 200, 34, 34));
+
+        ball.bounce();
 
         // Initialize panelHandler.
         panelHandler = new PanelHandler(10, screenSize);
@@ -100,14 +103,21 @@ public class GameSurfaceView extends SurfaceView implements Runnable {
      */
     protected void update() {
         // Game mechanics
+        /*
         if (ball.getBottom() >= screenSize.y) {
             ball.bounce();
         } else if (ball.getTop() <= 0) {
             ball.bounce();
         }
+        */
 
-        ball.setY(ball.getY() + ball.getSpeed() * ball.getDirection().y);
+        if (ball.getBottom() >= screenSize.y) {
+            pause();
+        }
 
+        ball.setY((ball.getY() + ball.getSpeed() * ball.getDirection().y) + ball.velocity);
+
+            ball.velocity += ball.getResistance();
 
         for (int i = 0; i < panelHandler.getPanelList().length; ++i) {
             Panel panel = panelHandler.getPanelList()[i];
@@ -122,11 +132,11 @@ public class GameSurfaceView extends SurfaceView implements Runnable {
                     // Move the panel down.
                     panel.setY(panel.getY() + panel.getSpeed());
                 }
-            } else {
-                if (ball.intersects(panel.getX(), panel.getY(), panel.getWidth(), panel.getHeight())) {
-                    ball.bounce();
-                }
             }
+            if (ball.intersects(panel.getX(), panel.getY(), panel.getWidth(), panel.getHeight())) {
+                ball.bounce();
+            }
+
         }
     }
 
