@@ -32,11 +32,38 @@ public class Ball extends Sprite {
         getDirection().y *= -1;
     }
 
+    public boolean intersects(float x, float y, float w, float h) {
+        return x < this.getLeft() + this.width &&
+                x + w > this.getLeft() &&
+                y < this.getTop() + this.height &&
+                y + h > this.getTop();
+    }
+
     public float getRadius() {
         return radius;
     }
 
     public void setRadius(float radius) {
         this.radius = radius;
+    }
+
+    @Override
+    public float getTop() {
+        return y - radius;
+    }
+
+    @Override
+    public float getBottom() {
+        return y + radius;
+    }
+
+    @Override
+    public float getLeft() {
+        return x - radius;
+    }
+
+    @Override
+    public float getRight() {
+        return x + radius;
     }
 }

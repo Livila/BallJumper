@@ -125,14 +125,13 @@ public class GameSurfaceView extends SurfaceView implements Runnable {
 
 
         for (int i = 0; i < panelList.length; ++i) {
+            // When ball moves upwards, move panels down.
             if (ball.getDirection().y == -1) {
                 panelList[i].setY(panelList[i].getY() + panelList[i].getSpeed());
 
-                // If panel is below check, erase...
-            }
-
-            if (ball.getBottom() > panelList[i].getTop()) {
-                if (ball.getX() > panelList[i].getX()) {
+                // If panel is below check, reset...
+            } else {
+                if (ball.intersects(panelList[i].getX(), panelList[i].getY(), panelList[i].getWidth(), panelList[i].getHeight())) {
                     ball.bounce();
                 }
             }
