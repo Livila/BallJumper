@@ -76,12 +76,12 @@ public class GameSurfaceView extends SurfaceView implements Runnable {
         int height = 0;
         Random random = new Random();
 
-        int panelWidth = 100;
+        int panelWidth = 150;
         float px = random.nextInt(screenSize.x - panelWidth);
         float py = height - random.nextInt(screenSize.y / 3);
 
         for (int i = 0; i < panelList.length; ++i) {
-            panelList[i] = new Panel(px, py, px + panelWidth, 30, Color.GRAY);
+            panelList[i] = new Panel(px, py, panelWidth, 30, Color.GRAY);
         }
     }
 
@@ -154,7 +154,7 @@ public class GameSurfaceView extends SurfaceView implements Runnable {
         for (Panel panel : panelList) {
             Paint pPanel = new Paint();
             pPanel.setColor(panel.getColor());
-            canvas.drawRect(panel.getX(), panel.getY(), panel.getWidth(), panel.getHeight() + panel.getY(), pPanel);
+            canvas.drawRect(panel.getX(), panel.getY(), panel.getWidth() + panel.getX(), panel.getHeight() + panel.getY(), pPanel);
         }
     }
 
@@ -179,10 +179,10 @@ public class GameSurfaceView extends SurfaceView implements Runnable {
 
             // Make sure update, updates accordingly to the FPS.
             float deltaTime = (System.currentTimeMillis() - started);
-            int sleepTime = (int) (FRAME_PERIOD - deltaTime);
+            int sleepTime = (int) ((FRAME_PERIOD - deltaTime) / 2);
             if (sleepTime > 0) {
                 try {
-                    gameThread.sleep(sleepTime / 2);
+                    gameThread.sleep(sleepTime);
                 }
                 catch (InterruptedException e) {
                 }
