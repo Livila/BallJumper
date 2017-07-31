@@ -64,7 +64,7 @@ public class GameSurfaceView extends SurfaceView implements Runnable {
         ball = new Ball(screenSize.x / 2 - ballRadius,
                        (screenSize.y / 3) * 2 - ballRadius,
                         ballRadius,
-                        -.3f,
+                        0.3f,
                         0.4f,
                         Color.argb(255, 200, 34, 34));
 
@@ -104,27 +104,26 @@ public class GameSurfaceView extends SurfaceView implements Runnable {
      */
     protected void update() {
         // Game mechanics
-        /*
-        if (ball.getBottom() >= screenSize.y) {
-            ball.bounce();
-        } else if (ball.getTop() <= 0) {
-            ball.bounce();
-        }
-        */
 
+        // If the ball goes below the screen, you lose.
         if (ball.getBottom() >= screenSize.y) {
             pause();
         }
 
-        ball.setY((ball.getY() + ball.getSpeed() * ball.getDirection().y) + ball.getVelocity());
-
-        ball.setVelocity(ball.getVelocity() + ball.getGravity());
+        ball.move();
 
         for (int i = 0; i < panelHandler.getPanelList().length; ++i) {
             Panel panel = panelHandler.getPanelList()[i];
 
+            // Bounce when falling downwards, on a panel.
+            if (ball.getDeltaY() >= 0) {
+                if (ball.intersects(panel.getX(), panel.getY(), panel.getWidth(), panel.getHeight())) {
+                    ball.bounce();
+                }
+            }
+
             // When ball moves upwards, move panels down.
-            if (ball.getDirection().y == -1) {
+            //if (ball.getDeltaY() < 0) {
 
                 // If the panel is outside of the screen...
                 if (panel.getY() + panel.getSpeed() > screenSize.y) {
@@ -133,10 +132,7 @@ public class GameSurfaceView extends SurfaceView implements Runnable {
                     // Move the panel down.
                     panel.setY(panel.getY() + panel.getSpeed());
                 }
-            }
-            if (ball.intersects(panel.getX(), panel.getY(), panel.getWidth(), panel.getHeight())) {
-                ball.bounce();
-            }
+            //}
 
         }
     }

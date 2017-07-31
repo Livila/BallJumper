@@ -13,6 +13,7 @@ public class Ball extends Sprite {
     private float radius;
     private float velocity;
     private float gravity;
+    private float deltaX, deltaY;
 
     public Ball(float x, float y, float radius, float velocity, float gravity, int color) {
         super(x, y, radius * 2, radius * 2);
@@ -37,8 +38,18 @@ public class Ball extends Sprite {
     public void bounce() {
         // Simple bounce.
         y-=speed; // Give it some speed up, so it doesn't get stuck.
-        velocity = -.3f; // Reset velocity
-        getDirection().y *= -1; // Change ball direction.
+        velocity = 0.3f; // Reset velocity
+    }
+
+    public void move() {
+        this.deltaY = y;
+        this.deltaX = x;
+
+        setVelocity(velocity + gravity);
+        setY(y - speed + velocity);
+
+        this.deltaY = y - this.deltaY;
+        this.deltaX = x - this.deltaX;
     }
 
     public boolean intersects(float x, float y, float w, float h) {
@@ -90,5 +101,13 @@ public class Ball extends Sprite {
     @Override
     public float getRight() {
         return x + radius;
+    }
+
+    public float getDeltaX() {
+        return deltaX;
+    }
+
+    public float getDeltaY() {
+        return deltaY;
     }
 }

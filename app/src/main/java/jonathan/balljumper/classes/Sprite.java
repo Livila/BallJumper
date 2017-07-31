@@ -10,7 +10,6 @@ import android.graphics.Point;
 public class Sprite {
     protected float x, y;
     protected float width, height;
-    protected Point direction;
     protected float speed = 0;
     protected int color = 0;
     protected Bitmap image;
@@ -18,7 +17,6 @@ public class Sprite {
     public Sprite(float x, float y) {
         this.x = x;
         this.y = y;
-        direction = new Point(1, 1);
     }
 
     public Sprite(float x, float y, float width, float height) {
@@ -88,14 +86,6 @@ public class Sprite {
 
     public float getRight() {
         return x + width;
-    }
-
-    public Point getDirection() {
-        return direction;
-    }
-
-    public void setDirection(Point direction) {
-        this.direction = direction;
     }
 
     public float getSpeed() {
