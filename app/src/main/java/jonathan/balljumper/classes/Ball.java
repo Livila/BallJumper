@@ -11,14 +11,14 @@ import android.graphics.Paint;
 
 public class Ball extends Sprite {
     private float radius;
-    private float resistance;
-    public float velocity;
+    private float velocity;
+    private float gravity;
 
-    public Ball(float x, float y, float radius, float resistance, int color) {
+    public Ball(float x, float y, float radius, float velocity, float gravity, int color) {
         super(x, y, radius * 2, radius * 2);
         this.radius = radius;
-        this.resistance = resistance;
-        this.velocity = -.3f;
+        this.gravity = gravity;
+        this.velocity = velocity;
         setColor(color);
         setSpeed(17f);
     }
@@ -31,11 +31,14 @@ public class Ball extends Sprite {
         canvas.drawCircle(getX(), getY(), getRadius(), p);
     }
 
+    /**
+     * Bounce the ball.
+     */
     public void bounce() {
         // Simple bounce.
-        getDirection().y *= -1;
-        y-=speed;
-        velocity = -.3f;
+        y-=speed; // Give it some speed up, so it doesn't get stuck.
+        velocity = -.3f; // Reset velocity
+        getDirection().y *= -1; // Change ball direction.
     }
 
     public boolean intersects(float x, float y, float w, float h) {
@@ -53,12 +56,20 @@ public class Ball extends Sprite {
         this.radius = radius;
     }
 
-    public float getResistance() {
-        return resistance;
+    public float getGravity() {
+        return gravity;
     }
 
-    public void setResistance(float resistance) {
-        this.resistance = resistance;
+    public void setGravity(float gravity) {
+        this.gravity = gravity;
+    }
+
+    public float getVelocity() {
+        return velocity;
+    }
+
+    public void setVelocity(float velocity) {
+        this.velocity = velocity;
     }
 
     @Override
