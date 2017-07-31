@@ -1,7 +1,6 @@
 package jonathan.balljumper.classes;
 
 import android.graphics.Bitmap;
-import android.graphics.Point;
 
 /**
  * Created by Jonathan on 27/07/2017.

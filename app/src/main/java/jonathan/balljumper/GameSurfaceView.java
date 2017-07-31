@@ -2,12 +2,9 @@ package jonathan.balljumper;
 
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Point;
-import android.graphics.Rect;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -64,8 +61,9 @@ public class GameSurfaceView extends SurfaceView implements Runnable {
         ball = new Ball(screenSize.x / 2 - ballRadius,
                        (screenSize.y / 3) * 2 - ballRadius,
                         ballRadius,
-                        0.3f,
-                        0.4f,
+                        0.3f, // Velocity
+                        0.4f, // Gravity
+                        17f, // Speed
                         Color.argb(255, 200, 34, 34));
 
         // Initialize panelHandler.

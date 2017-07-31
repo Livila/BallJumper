@@ -15,28 +15,27 @@ public class Ball extends Sprite {
     private float gravity;
     private float deltaX, deltaY;
 
-    public Ball(float x, float y, float radius, float velocity, float gravity, int color) {
+    public Ball(float x, float y, float radius, float velocity, float gravity, float speed, int color) {
         super(x, y, radius * 2, radius * 2);
         this.radius = radius;
         this.gravity = gravity;
         this.velocity = velocity;
+        this.speed = speed;
         setColor(color);
-        setSpeed(17f);
     }
 
     public void draw(Canvas canvas) {
         Paint p = new Paint();
-        ColorFilter filter = new LightingColorFilter(getColor(), 0);
+        ColorFilter filter = new LightingColorFilter(color, 0);
         p.setColorFilter(filter);
-        p.setColor(getColor());
-        canvas.drawCircle(getX(), getY(), getRadius(), p);
+        p.setColor(color);
+        canvas.drawCircle(x, y, radius, p);
     }
 
     /**
      * Bounce the ball.
      */
     public void bounce() {
-        // Simple bounce.
         y-=speed; // Give it some speed up, so it doesn't get stuck.
         velocity = 0.3f; // Reset velocity
     }
@@ -45,8 +44,8 @@ public class Ball extends Sprite {
         this.deltaY = y;
         this.deltaX = x;
 
-        setVelocity(velocity + gravity);
-        setY(y - speed + velocity);
+        velocity = velocity + gravity;
+        y = y - speed + velocity;
 
         this.deltaY = y - this.deltaY;
         this.deltaX = x - this.deltaX;
@@ -57,30 +56,6 @@ public class Ball extends Sprite {
                 x + w > this.getLeft() &&
                 y < this.getTop() + this.height &&
                 y + h > this.getTop();
-    }
-
-    public float getRadius() {
-        return radius;
-    }
-
-    public void setRadius(float radius) {
-        this.radius = radius;
-    }
-
-    public float getGravity() {
-        return gravity;
-    }
-
-    public void setGravity(float gravity) {
-        this.gravity = gravity;
-    }
-
-    public float getVelocity() {
-        return velocity;
-    }
-
-    public void setVelocity(float velocity) {
-        this.velocity = velocity;
     }
 
     @Override
