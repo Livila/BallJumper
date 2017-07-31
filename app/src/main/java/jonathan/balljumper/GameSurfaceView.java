@@ -68,10 +68,8 @@ public class GameSurfaceView extends SurfaceView implements Runnable {
                         0.4f,
                         Color.argb(255, 200, 34, 34));
 
-        ball.bounce();
-
         // Initialize panelHandler.
-        panelHandler = new PanelHandler(10, screenSize);
+        panelHandler = new PanelHandler(10, 150, 20, screenSize);
     }
 
     /**

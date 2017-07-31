@@ -21,7 +21,7 @@ public class PanelHandler {
     private Panel[] panelList;
     private int lastPanelIndex = -1;
 
-    public PanelHandler(int panelCount, Point screenSize) {
+    public PanelHandler(int panelCount, int panelWidth, int panelHeight, Point screenSize) {
         this.panelCount = panelCount;
         this.screenSize = screenSize;
 
@@ -32,13 +32,12 @@ public class PanelHandler {
 
         Random random = new Random();
 
-        int panelWidth = 150;
         for (int i = 0; i < panelList.length; ++i) {
             panelList[i] = new Panel(
                     random.nextInt(screenSize.x - panelWidth),
                     getNewPanelHeight(lastPanelIndex),
                     panelWidth,
-                    30,
+                    panelHeight,
                     Color.GRAY);
             lastPanelIndex = i;
         }
