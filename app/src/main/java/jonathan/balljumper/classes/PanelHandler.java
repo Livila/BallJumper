@@ -14,7 +14,6 @@ import java.util.Random;
 public class PanelHandler {
     private final int panelFirstPosition = 1500; // Y-position (pixel) of the first panel.
 
-    private int panelCount;
     private Point screenSize;
     private Random random;
 
@@ -22,7 +21,6 @@ public class PanelHandler {
     private int lastPanelIndex = -1;
 
     public PanelHandler(int panelCount, int panelWidth, int panelHeight, Point screenSize) {
-        this.panelCount = panelCount;
         this.screenSize = screenSize;
 
         random = new Random();
@@ -54,7 +52,8 @@ public class PanelHandler {
         if (index == -1) {
             newPanelHeight = panelFirstPosition;
         } else {
-            newPanelHeight = panelList[index].getY() - (random.nextInt(screenSize.y / 5) + 250);
+            float diff = (random.nextInt(screenSize.y / 5) + 250);
+            newPanelHeight = panelList[index].getY() - diff;
         }
 
         return newPanelHeight;

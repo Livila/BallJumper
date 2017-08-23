@@ -11,7 +11,7 @@ import android.graphics.Paint;
 
 public class Ball extends Sprite {
     private float radius;
-    private float velocity;
+    private float velocity, startVelocity;
     private float gravity;
     private float deltaX, deltaY;
 
@@ -19,6 +19,7 @@ public class Ball extends Sprite {
         super(x, y, radius * 2, radius * 2);
         this.radius = radius;
         this.gravity = gravity;
+        this.startVelocity = velocity;
         this.velocity = velocity;
         this.speed = speed;
         setColor(color);
@@ -37,7 +38,7 @@ public class Ball extends Sprite {
      */
     public void bounce() {
         y-=speed; // Give it some speed up, so it doesn't get stuck.
-        velocity = 0.3f; // Reset velocity
+        velocity = this.startVelocity; // Reset velocity
     }
 
     public void move() {

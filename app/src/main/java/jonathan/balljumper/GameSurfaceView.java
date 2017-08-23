@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Point;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -61,8 +62,8 @@ public class GameSurfaceView extends SurfaceView implements Runnable {
         ball = new Ball(screenSize.x / 2 - ballRadius,
                        (screenSize.y / 3) * 2 - ballRadius,
                         ballRadius,
-                        0.3f, // Velocity
-                        0.4f, // Gravity
+                        0.2f, // Velocity
+                        0.5f, // Gravity
                         17f, // Speed
                         Color.argb(255, 200, 34, 34));
 
@@ -111,9 +112,10 @@ public class GameSurfaceView extends SurfaceView implements Runnable {
         for (int i = 0; i < panelHandler.getPanelList().length; ++i) {
             Panel panel = panelHandler.getPanelList()[i];
 
-            // Bounce when falling downwards, on a panel.
-            if (ball.getDeltaY() >= 0) {
-                if (ball.intersects(panel.getX(), panel.getY(), panel.getWidth(), panel.getHeight())) {
+            // Bounce if the ball intersects with a panel.
+            if (ball.intersects(panel.getX(), panel.getY(), panel.getWidth(), panel.getHeight())) {
+                // Do not bounce if you're above the screen.
+                if (ball.getBottom() > 0) {
                     ball.bounce();
                 }
             }
