@@ -5,8 +5,8 @@ package jonathan.balljumper.classes;
  */
 
 public class Panel extends Sprite {
-    public Panel(float x, float y, float width, float height, int color) {
+    public Panel(float x, float y, float width, float height, int color, float speed) {
         super(x, y, width, height, color);
-        setSpeed(5f);
+        setSpeed(speed);
     }
 }

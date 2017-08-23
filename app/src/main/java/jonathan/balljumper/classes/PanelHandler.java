@@ -20,7 +20,7 @@ public class PanelHandler {
     private Panel[] panelList;
     private int lastPanelIndex = -1;
 
-    public PanelHandler(int panelCount, int panelWidth, int panelHeight, Point screenSize) {
+    public PanelHandler(int panelCount, int panelWidth, int panelHeight, float panelSpeed, Point screenSize) {
         this.screenSize = screenSize;
 
         random = new Random();
@@ -36,12 +36,14 @@ public class PanelHandler {
                     getNewPanelHeight(lastPanelIndex),
                     panelWidth,
                     panelHeight,
-                    Color.GRAY);
+                    Color.GRAY,
+                    panelSpeed
+            );
             lastPanelIndex = i;
         }
     }
 
-    public void resetPanel(int index) {
+    private void resetPanel(int index) {
         panelList[index].setY(getNewPanelHeight(lastPanelIndex));
 
         lastPanelIndex = index;
@@ -68,6 +70,29 @@ public class PanelHandler {
             Paint pPanel = new Paint();
             pPanel.setColor(panel.getColor());
             canvas.drawRect(panel.getX(), panel.getY(), panel.getWidth() + panel.getX(), panel.getHeight() + panel.getY(), pPanel);
+        }
+    }
+
+    /**
+     * Move the panel.
+     * @param index The panel index to move.
+     */
+    public void move(int index) {
+        move(index, panelList[index].getSpeed());
+    }
+
+    /**
+     *
+     * @param index The panel index to move.
+     * @param speed The speed to move the panel.
+     */
+    public void move(int index, float speed) {
+        // If a panel is outside of the screen reset it at the top.
+        if (panelList[index].getY() + speed > screenSize.y) {
+            resetPanel(index);
+        } else {
+            // Move the panel down.
+            panelList[index].setY(panelList[index].getY() + speed);
         }
     }
 }
