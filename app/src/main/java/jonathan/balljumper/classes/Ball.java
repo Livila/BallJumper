@@ -16,6 +16,8 @@ public class Ball extends Sprite {
     private float deltaX, deltaY;
     private int jumpBoost;
 
+    private Paint paint;
+
     public Ball(float x, float y, float radius, float velocity, float gravity, float speed, int color) {
         super(x, y, radius * 2, radius * 2);
         this.radius = radius;
@@ -23,16 +25,17 @@ public class Ball extends Sprite {
         this.startVelocity = velocity;
         this.velocity = velocity;
         this.speed = speed;
-        setColor(color);
+        this.color = color;
         this.jumpBoost = -1;
+
+        paint = new Paint();
+        ColorFilter filter = new LightingColorFilter(color, 90);
+        paint.setColorFilter(filter);
+        paint.setColor(color);
     }
 
     public void draw(Canvas canvas) {
-        Paint p = new Paint();
-        ColorFilter filter = new LightingColorFilter(color, 0);
-        p.setColorFilter(filter);
-        p.setColor(color);
-        canvas.drawCircle(x, y, radius, p);
+        canvas.drawOval(getLeft(), getTop(), getRight(), getBottom(), paint);
     }
 
     /**
