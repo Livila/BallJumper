@@ -24,7 +24,7 @@ public class SoundController {
         this.isMuted = mute;
     }
 
-    public void playBounce() {
+    public final void playBounce() {
         if (this.mpBounce.isPlaying()) {
             this.mpBounce.seekTo(0);
         } else {

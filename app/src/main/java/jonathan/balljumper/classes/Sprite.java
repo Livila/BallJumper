@@ -39,7 +39,7 @@ public class Sprite {
         this.color = color;
     }
 
-    public float getX() {
+    public final float getX() {
         return x;
     }
 
@@ -47,7 +47,7 @@ public class Sprite {
         this.x = x;
     }
 
-    public float getY() {
+    public final float getY() {
         return y;
     }
 
@@ -55,7 +55,7 @@ public class Sprite {
         this.y = y;
     }
 
-    public float getWidth() {
+    public final float getWidth() {
         return width;
     }
 
@@ -63,7 +63,7 @@ public class Sprite {
         this.width = width;
     }
 
-    public float getHeight() {
+    public final float getHeight() {
         return height;
     }
 
@@ -87,7 +87,7 @@ public class Sprite {
         return x + width;
     }
 
-    public float getSpeed() {
+    public final float getSpeed() {
         return speed;
     }
 
@@ -95,7 +95,7 @@ public class Sprite {
         this.speed = speed;
     }
 
-    public int getColor() {
+    public final int getColor() {
         return color;
     }
 
@@ -103,7 +103,7 @@ public class Sprite {
         this.color = color;
     }
 
-    public Bitmap getImage() {
+    public final Bitmap getImage() {
         return image;
     }
 

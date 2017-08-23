@@ -42,7 +42,7 @@ public class Ball extends Sprite {
         this.soundController = soundController;
     }
 
-    public void draw(Canvas canvas) {
+    public final void draw(Canvas canvas) {
         canvas.drawOval(
                 getLeft() - animationSize / 2,
                 getTop() + animationSize * 2,
@@ -101,7 +101,7 @@ public class Ball extends Sprite {
 
     }
 
-    public boolean intersects(float x, float y, float w, float h) {
+    public final boolean intersects(float x, float y, float w, float h) {
         return x < this.getLeft() + this.width &&
                 x + w > this.getLeft() &&
                 y < this.getTop() + this.height &&
@@ -114,17 +114,17 @@ public class Ball extends Sprite {
     }
 
     @Override
-    public float getBottom() {
+    public final float getBottom() {
         return y + radius;
     }
 
     @Override
-    public float getLeft() {
+    public final float getLeft() {
         return x - radius;
     }
 
     @Override
-    public float getRight() {
+    public final float getRight() {
         return x + radius;
     }
 
@@ -132,7 +132,7 @@ public class Ball extends Sprite {
         this.deltaX = newDeltaX;
     }
 
-    public float getDeltaX() {
+    public final float getDeltaX() {
         return deltaX;
     }
 
@@ -140,11 +140,11 @@ public class Ball extends Sprite {
         this.deltaY = newDeltaY;
     }
 
-    public float getDeltaY() {
+    public final float getDeltaY() {
         return deltaY;
     }
 
-    public float getVelocity() {
+    public final float getVelocity() {
         return velocity;
     }
 }

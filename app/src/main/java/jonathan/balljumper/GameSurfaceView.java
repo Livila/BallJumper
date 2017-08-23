@@ -5,7 +5,6 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Point;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -14,6 +13,7 @@ import jonathan.balljumper.classes.Ball;
 import jonathan.balljumper.classes.HighscoreHandler;
 import jonathan.balljumper.classes.Panel;
 import jonathan.balljumper.classes.PanelHandler;
+import jonathan.balljumper.classes.SoundController;
 
 /**
  * Created by Jonathan on 27/07/2017.
@@ -22,14 +22,14 @@ import jonathan.balljumper.classes.PanelHandler;
 public class GameSurfaceView extends SurfaceView implements Runnable {
     private boolean isRunning = false;
     private Thread gameThread;
-    private SurfaceHolder holder;
+    private final SurfaceHolder holder;
 
     private Point screenSize;
 
-    private Ball ball;
-    private PanelHandler panelHandler;
-    private HighscoreHandler highscoreHandler;
-    private SoundController soundController;
+    private final Ball ball;
+    private final PanelHandler panelHandler;
+    private final HighscoreHandler highscoreHandler;
+    private final SoundController soundController;
 
     private final static int MAX_FPS = 40;
     private final static int FRAME_PERIOD = 1000 / MAX_FPS;
@@ -163,7 +163,7 @@ public class GameSurfaceView extends SurfaceView implements Runnable {
      * Render everything to the screen.
      * @param canvas Canvas to be used when rendering.
      */
-    protected void render(Canvas canvas) {
+    protected final void render(Canvas canvas) {
         // Reset background
         canvas.drawColor(Color.GREEN);
 

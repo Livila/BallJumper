@@ -9,7 +9,7 @@ import android.graphics.Paint;
  */
 
 public class HighscoreHandler {
-    private Paint paint;
+    private final Paint paint;
 
     private float currentHeight; // Keeps track of how far you've gotten.
     private long startTime; // Keeps track of the time you've played.
@@ -22,12 +22,12 @@ public class HighscoreHandler {
         startTime = System.currentTimeMillis();
     }
 
-    public void draw(Canvas canvas) {
+    public final void draw(Canvas canvas) {
         canvas.drawText(String.format("Height: %d meters", (int) (currentHeight / 10)), 6, 30, paint);
         canvas.drawText(String.format("Time: %s", getTimePlayed()), 6, 55, paint);
     }
 
-    private String getTimePlayed() {
+    private final String getTimePlayed() {
         long currentTime = (System.currentTimeMillis() - startTime) / 1000;
         int s = ((int)(currentTime % 60));
         int m = ((int)(currentTime / 60 % 60));
