@@ -5,6 +5,8 @@ import android.graphics.ColorFilter;
 import android.graphics.LightingColorFilter;
 import android.graphics.Paint;
 
+import jonathan.balljumper.GameSurfaceView;
+
 /**
  * Created by Jonathan on 27/07/2017.
  */
@@ -126,6 +128,17 @@ public class Ball extends Sprite {
     @Override
     public final float getRight() {
         return x + radius;
+    }
+
+    @Override
+    public void setX(float x) {
+        this.x = x;
+        if (getLeft() < 0) {
+            this.x = 0;
+        }
+        if (getRight() > GameSurfaceView.getScreenSize().x) {
+            this.x = GameSurfaceView.getScreenSize().x;
+        }
     }
 
     public void setDeltaX(float newDeltaX) {
