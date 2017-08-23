@@ -7,6 +7,8 @@ import android.graphics.Point;
 
 import java.util.Random;
 
+import jonathan.balljumper.GameSurfaceView;
+
 /**
  * Created by Jonathan on 29/07/2017.
  */
@@ -15,14 +17,12 @@ public class PanelHandler {
     private final int panelFirstPosition = 1500; // Y-position (pixel) of the first panel.
 
     private final float panelSpeed; // The normal panel speed.
-    private final Point screenSize;
     private final Random random;
 
     private final Panel[] panelList;
     private int lastPanelIndex = -1;
 
-    public PanelHandler(int panelCount, int panelWidth, int panelHeight, float panelSpeed, Point screenSize) {
-        this.screenSize = screenSize;
+    public PanelHandler(int panelCount, int panelWidth, int panelHeight, float panelSpeed) {
         this.panelSpeed = panelSpeed;
 
         // Initialize all panels.
@@ -32,7 +32,7 @@ public class PanelHandler {
 
         for (int i = 0; i < panelList.length; ++i) {
             panelList[i] = new Panel(
-                    random.nextInt(screenSize.x - panelWidth),
+                    random.nextInt(GameSurfaceView.getScreenSize().x - panelWidth),
                     getNewPanelHeight(lastPanelIndex),
                     panelWidth,
                     panelHeight,
@@ -54,7 +54,7 @@ public class PanelHandler {
         if (index == -1) {
             newPanelHeight = panelFirstPosition;
         } else {
-            float diff = (random.nextInt(screenSize.y / 5) + 235);
+            float diff = (random.nextInt(GameSurfaceView.getScreenSize().y / 5) + 235);
             newPanelHeight = panelList[index].getY() - diff;
         }
 
@@ -64,7 +64,7 @@ public class PanelHandler {
     public void resetAllPanels() {
         lastPanelIndex = -1;
         for (int i = 0; i < panelList.length; ++i) {
-            panelList[i].setX(random.nextInt(screenSize.x - (int)panelList[i].getWidth()));
+            panelList[i].setX(random.nextInt(GameSurfaceView.getScreenSize().x - (int)panelList[i].getWidth()));
             panelList[i].setY(getNewPanelHeight(lastPanelIndex));
         }
     }
@@ -92,7 +92,7 @@ public class PanelHandler {
      */
     public void move(int index, float speed) {
         // If a panel is outside of the screen reset it at the top.
-        if (panelList[index].getY() + speed > screenSize.y) {
+        if (panelList[index].getY() + speed > GameSurfaceView.getScreenSize().y) {
             resetPanel(index);
         } else {
             // Move the panel down.

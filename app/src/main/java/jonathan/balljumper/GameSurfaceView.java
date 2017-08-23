@@ -24,7 +24,9 @@ public class GameSurfaceView extends SurfaceView implements Runnable {
     private Thread gameThread;
     private final SurfaceHolder holder;
 
-    private final Point screenSize;
+    private final static Point screenSize = new Point();
+    public static Point getScreenSize() { return screenSize; }
+
     private boolean isTouchDown = false;
     private long touchStartTime;
     private float touchMoveDeltaX, touchMoveDeltaY;
@@ -41,7 +43,6 @@ public class GameSurfaceView extends SurfaceView implements Runnable {
         super(context);
 
         // Get and set window size.
-        screenSize = new Point();
         ((Activity)getContext()).getWindowManager()
                                 .getDefaultDisplay()
                                 .getSize(screenSize);
@@ -79,7 +80,7 @@ public class GameSurfaceView extends SurfaceView implements Runnable {
         );
 
         // Initialize panelHandler.
-        panelHandler = new PanelHandler(10, 150, 20, 5f, screenSize);
+        panelHandler = new PanelHandler(10, 150, 20, 5f);
 
         highscoreHandler = new HighscoreHandler();
     }
