@@ -115,7 +115,7 @@ public class GameSurfaceView extends SurfaceView implements Runnable {
         }
 
         ball.move();
-        highscoreHandler.addHeight(5f);
+        highscoreHandler.addHeight(panelHandler.getPanelSpeed());
 
         // Check if the ball is going too high, if so move the screen with the ball.
         if (ball.getVelocity() < ball.getSpeed() && ball.getTop() < (screenSize.y / 3) * 2) {

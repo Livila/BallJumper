@@ -14,6 +14,7 @@ import java.util.Random;
 public class PanelHandler {
     private final int panelFirstPosition = 1500; // Y-position (pixel) of the first panel.
 
+    private float panelSpeed; // The normal panel speed.
     private Point screenSize;
     private Random random;
 
@@ -22,13 +23,12 @@ public class PanelHandler {
 
     public PanelHandler(int panelCount, int panelWidth, int panelHeight, float panelSpeed, Point screenSize) {
         this.screenSize = screenSize;
-
-        random = new Random();
+        this.panelSpeed = panelSpeed;
 
         // Initialize all panels.
         panelList = new Panel[panelCount];
 
-        Random random = new Random();
+        random = new Random();
 
         for (int i = 0; i < panelList.length; ++i) {
             panelList[i] = new Panel(
@@ -69,10 +69,6 @@ public class PanelHandler {
         }
     }
 
-    public Panel[] getPanelList() {
-        return panelList;
-    }
-
     public void draw(Canvas canvas) {
         for (Panel panel : panelList) {
             Paint pPanel = new Paint();
@@ -102,5 +98,13 @@ public class PanelHandler {
             // Move the panel down.
             panelList[index].setY(panelList[index].getY() + speed);
         }
+    }
+
+    public Panel[] getPanelList() {
+        return this.panelList;
+    }
+
+    public float getPanelSpeed() {
+        return this.panelSpeed;
     }
 }
