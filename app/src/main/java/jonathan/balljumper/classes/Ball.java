@@ -14,7 +14,6 @@ import jonathan.balljumper.GameSurfaceView;
 public class Ball extends Sprite {
     private final int animationSizeMax = 6;
 
-    private final SoundController soundController;
     private final Paint paint;
 
     private float radius;
@@ -26,7 +25,7 @@ public class Ball extends Sprite {
     private boolean isAnimationRunning;
     private float animationSize;
 
-    public Ball(float x, float y, float radius, float velocity, float gravity, float speed, int color, SoundController soundController) {
+    public Ball(float x, float y, float radius, float velocity, float gravity, float speed, int color) {
         super(x, y, radius * 2, radius * 2);
         this.radius = radius;
         this.gravity = gravity;
@@ -40,8 +39,6 @@ public class Ball extends Sprite {
         ColorFilter filter = new LightingColorFilter(color, 90);
         paint.setColorFilter(filter);
         paint.setColor(color);
-
-        this.soundController = soundController;
     }
 
     public final void draw(Canvas canvas) {
@@ -94,7 +91,6 @@ public class Ball extends Sprite {
             animationSize += velocity * 2;
             if (animationSize >= animationSizeMax) {
                 isAnimationRunning = false;
-                soundController.playBounce();
             }
         } else if (animationSize > 0) {
             animationSize -= velocity * 2;

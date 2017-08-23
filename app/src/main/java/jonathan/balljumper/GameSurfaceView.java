@@ -75,8 +75,7 @@ public class GameSurfaceView extends SurfaceView implements Runnable {
                         0.2f, // Velocity
                         0.5f, // Gravity
                         17f, // Speed
-                        Color.argb(255, 200, 34, 34),
-                        soundController
+                        Color.argb(255, 200, 34, 34)
         );
 
         // Initialize panelHandler.
@@ -155,6 +154,7 @@ public class GameSurfaceView extends SurfaceView implements Runnable {
                 if (ball.intersects(panel.getX(), panel.getY(), panel.getWidth(), panel.getHeight())) {
                     // Do not bounce if you're above the screen.
                     if (ball.getBottom() > 0) {
+                        soundController.playBounce();
                         ball.bounce();
                         highscoreHandler.addBounce();
 
