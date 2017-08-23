@@ -105,7 +105,7 @@ public class GameSurfaceView extends SurfaceView implements Runnable {
 
         // If the ball goes below the screen, you lose.
         if (ball.getBottom() >= screenSize.y) {
-            pause();
+            lose();
         }
 
         ball.move();
@@ -206,5 +206,18 @@ public class GameSurfaceView extends SurfaceView implements Runnable {
         }
 
         return true;
+    }
+
+    public void lose() {
+        isRunning = false;
+
+        try {
+            gameThread.sleep(1000);
+        } catch (InterruptedException e) { }
+
+        ball.bounce();
+        ball.setX(screenSize.x / 2 - ball.getWidth() / 2);
+        ball.setY((screenSize.y / 3) * 2 - ball.getWidth() / 2);
+        isRunning = true;
     }
 }
