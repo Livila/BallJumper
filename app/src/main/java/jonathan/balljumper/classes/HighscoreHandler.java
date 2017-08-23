@@ -4,6 +4,8 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 
+import java.util.Locale;
+
 /**
  * Created by Jonathan on 23/08/2017.
  */
@@ -25,9 +27,9 @@ public class HighscoreHandler {
 
     public final void draw(Canvas canvas) {
         String[] text = {
-                String.format("Height: %d meters", (int) (currentHeight / 10)),
-                String.format("Bounces: %d", (currentBounces)),
-                String.format("Time: %s", getTimePlayed()),
+                String.format(Locale.ENGLISH, "Height: %d meters", (int) (currentHeight / 10)),
+                String.format(Locale.ENGLISH, "Bounces: %d", (currentBounces)),
+                String.format(Locale.ENGLISH, "Time: %s", getTimePlayed()),
         };
 
         for (int i = 0; i < text.length; ++i) {
@@ -35,7 +37,7 @@ public class HighscoreHandler {
         }
     }
 
-    private final String getTimePlayed() {
+    private String getTimePlayed() {
         long currentTime = (System.currentTimeMillis() - startTime) / 1000;
         int s = ((int)(currentTime % 60));
         int m = ((int)(currentTime / 60 % 60));
@@ -52,6 +54,7 @@ public class HighscoreHandler {
         // TODO: Save function.
 
         currentHeight = 0;
+        currentBounces = 0;
         startTime = System.currentTimeMillis();
     }
 
