@@ -79,11 +79,17 @@ public class Ball extends Sprite {
         return x + radius;
     }
 
+    public void setDeltaX(float newDeltaX) { this.deltaX = newDeltaX; }
+
     public float getDeltaX() {
         return deltaX;
     }
 
+    public void setDeltaY(float newDeltaY) { this.deltaY = newDeltaY; }
+
     public float getDeltaY() {
         return deltaY;
     }
+
+    public float getVelocity() { return velocity; }
 }

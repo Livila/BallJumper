@@ -101,7 +101,9 @@ public class GameSurfaceView extends SurfaceView implements Runnable {
      */
     protected void update() {
         // Game mechanics
-        boolean ballHeightLimit = false;
+
+        // Delta value. If this is set, then move the screen accordingly.
+        float ballHeightLimit = -1;
 
         // If the ball goes below the screen, you lose.
         if (ball.getBottom() >= screenSize.y) {
@@ -111,16 +113,19 @@ public class GameSurfaceView extends SurfaceView implements Runnable {
         ball.move();
 
         // Check if the ball is going too high, if so move the screen with the ball.
-        if (ball.getDeltaY() < 0 && ball.getTop() < 150) {
-            ballHeightLimit = true;
+        if (ball.getVelocity() < ball.getSpeed() && ball.getTop() < 1000) {
             // Move the ball first to set the new velocity and to get the delta values.
-            // Reset the ball's position.
-            ball.setX(ball.getX() - ball.getDeltaX());
-            ball.setY(ball.getY() - ball.getDeltaY());
+            // Reset the ball's Y position.
+            ballHeightLimit = (ball.getDeltaY() * (1f / ((ball.getY() - 150) / 100)));
+            ball.setY(ball.getY() - ballHeightLimit);
+            ball.setDeltaY(ball.getDeltaY() - ballHeightLimit);
         }
 
         for (int i = 0; i < panelHandler.getPanelList().length; ++i) {
             Panel panel = panelHandler.getPanelList()[i];
+
+            // Move the panel at normal speed and reset it if it comes below the screen.
+            panelHandler.move(i);
 
             // Bounce if the ball intersects with a panel.
             if (ball.intersects(panel.getX(), panel.getY(), panel.getWidth(), panel.getHeight())) {
@@ -131,12 +136,8 @@ public class GameSurfaceView extends SurfaceView implements Runnable {
             }
 
             // When the ball moves upwards too much, move panels down by the same speed.
-            if (ballHeightLimit) {
-                panelHandler.move(i, -ball.getDeltaY());
-            } else {
-                // Else move the panels normal speed.
-                // Move the panel and reset it if it comes below the screen.
-                panelHandler.move(i);
+            if (ballHeightLimit != -1) {
+                panelHandler.move(i, -ballHeightLimit);
             }
         }
     }
