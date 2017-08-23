@@ -11,6 +11,7 @@ import android.graphics.Paint;
 public class HighscoreHandler {
     private final Paint paint;
 
+    private int currentBounces; // Keeps track of how many times you have bounced.
     private float currentHeight; // Keeps track of how far you've gotten.
     private long startTime; // Keeps track of the time you've played.
 
@@ -23,8 +24,15 @@ public class HighscoreHandler {
     }
 
     public final void draw(Canvas canvas) {
-        canvas.drawText(String.format("Height: %d meters", (int) (currentHeight / 10)), 6, 30, paint);
-        canvas.drawText(String.format("Time: %s", getTimePlayed()), 6, 55, paint);
+        String[] text = {
+                String.format("Height: %d meters", (int) (currentHeight / 10)),
+                String.format("Bounces: %d", (currentBounces)),
+                String.format("Time: %s", getTimePlayed()),
+        };
+
+        for (int i = 0; i < text.length; ++i) {
+            canvas.drawText(text[i], 7, 30 + 26 * i, paint);
+        }
     }
 
     private final String getTimePlayed() {
@@ -49,5 +57,9 @@ public class HighscoreHandler {
 
     public void addHeight(float height) {
         this.currentHeight += height;
+    }
+
+    public void addBounce() {
+        this.currentBounces++;
     }
 }

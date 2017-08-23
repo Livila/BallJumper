@@ -160,4 +160,8 @@ public class Ball extends Sprite {
     public final float getVelocity() {
         return velocity;
     }
+
+    public final boolean getHasJumped() {
+        return jumpBoost > 0;
+    }
 }

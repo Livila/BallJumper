@@ -150,14 +150,18 @@ public class GameSurfaceView extends SurfaceView implements Runnable {
                 panelHandler.move(i, -ballHeightLimit);
             }
 
-            // Bounce if the ball intersects with a panel.
-            if (ball.intersects(panel.getX(), panel.getY(), panel.getWidth(), panel.getHeight())) {
-                // Do not bounce if you're above the screen.
-                if (ball.getBottom() > 0) {
-                    ball.bounce();
-                    // If the ball is falling.
-                    if (ball.getDeltaY() > 0) {
-                        ball.setY(ball.getY() - (ball.getBottom() - panel.getTop()));
+            if (!ball.getHasJumped()) {
+                // Bounce if the ball intersects with a panel.
+                if (ball.intersects(panel.getX(), panel.getY(), panel.getWidth(), panel.getHeight())) {
+                    // Do not bounce if you're above the screen.
+                    if (ball.getBottom() > 0) {
+                        ball.bounce();
+                        highscoreHandler.addBounce();
+
+                        // If the ball is falling.
+                        if (ball.getDeltaY() > 0) {
+                            ball.setY(ball.getY() - (ball.getBottom() - panel.getTop()));
+                        }
                     }
                 }
             }
