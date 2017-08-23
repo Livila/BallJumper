@@ -10,11 +10,16 @@ import android.graphics.Paint;
  */
 
 public class Ball extends Sprite {
+    private final int animationSizeMax = 6;
+
     private float radius;
     private float velocity, startVelocity;
     private float gravity;
     private float deltaX, deltaY;
     private int jumpBoost;
+
+    private boolean isAnimationRunning;
+    private float animationSize;
 
     private Paint paint;
 
@@ -35,7 +40,13 @@ public class Ball extends Sprite {
     }
 
     public void draw(Canvas canvas) {
-        canvas.drawOval(getLeft(), getTop(), getRight(), getBottom(), paint);
+        canvas.drawOval(
+                getLeft() - animationSize / 2,
+                getTop() + animationSize * 2,
+                getRight() + animationSize / 2,
+                getBottom() - animationSize,
+                paint
+        );
     }
 
     /**
@@ -46,6 +57,8 @@ public class Ball extends Sprite {
             jumpBoost = (int)speed; // Give the ball a boost.
             velocity = this.startVelocity; // Reset velocity
         }
+
+        isAnimationRunning = true;
     }
 
     public void move() {
@@ -71,6 +84,17 @@ public class Ball extends Sprite {
 
         this.deltaY = y - this.deltaY;
         this.deltaX = x - this.deltaX;
+
+        if (isAnimationRunning) {
+            animationSize += velocity * 2;
+            if (animationSize >= animationSizeMax) {
+                isAnimationRunning = false;
+            }
+        } else if (animationSize > 0) {
+            animationSize -= velocity * 2;
+            if (animationSize < 0) animationSize = 0;
+        }
+
     }
 
     public boolean intersects(float x, float y, float w, float h) {
