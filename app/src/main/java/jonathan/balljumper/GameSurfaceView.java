@@ -24,7 +24,10 @@ public class GameSurfaceView extends SurfaceView implements Runnable {
     private Thread gameThread;
     private final SurfaceHolder holder;
 
-    private Point screenSize;
+    private final Point screenSize;
+    private boolean isTouchDown = false;
+    private long touchStartTime;
+    private float touchMoveDeltaX, touchMoveDeltaY;
 
     private final Ball ball;
     private final PanelHandler panelHandler;
@@ -64,8 +67,9 @@ public class GameSurfaceView extends SurfaceView implements Runnable {
 
         // Initialize ball.
         int ballRadius = 35;
+
         ball = new Ball(screenSize.x / 2 - ballRadius,
-                       (screenSize.y / 3) * 2 - ballRadius,
+                        (screenSize.y / 3) * 2 - ballRadius,
                         ballRadius,
                         0.2f, // Velocity
                         0.5f, // Gravity
@@ -222,7 +226,36 @@ public class GameSurfaceView extends SurfaceView implements Runnable {
 
         switch (event.getAction()) {
             case MotionEvent.ACTION_MOVE:
-                ball.setX(x);
+
+                // Calculate delta x and y.
+                touchMoveDeltaX = event.getX() - touchMoveDeltaX;
+                touchMoveDeltaY = event.getY() - touchMoveDeltaY;
+
+                // Skip first time you press down.
+                if (!isTouchDown) {
+                    isTouchDown = true;
+                } else {
+                    // Correct delta here.
+
+                    // Move the ball as you move the finger.
+                    ball.setX(ball.getX() + touchMoveDeltaX * 1.5f);
+                }
+
+                touchMoveDeltaX = event.getX();
+                touchMoveDeltaY = event.getY();
+
+                break;
+            case MotionEvent.ACTION_DOWN:
+                touchStartTime = System.currentTimeMillis();
+                break;
+
+            case MotionEvent.ACTION_UP:
+                // If you quickly press with your finger, move the ball to that position.
+                if ((System.currentTimeMillis() - touchStartTime) < 125) {
+                    ball.setX(event.getX());
+                }
+                touchStartTime = 0;
+                isTouchDown = false;
                 break;
         }
 
