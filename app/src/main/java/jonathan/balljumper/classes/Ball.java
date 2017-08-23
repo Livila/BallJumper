@@ -14,6 +14,7 @@ public class Ball extends Sprite {
     private float velocity, startVelocity;
     private float gravity;
     private float deltaX, deltaY;
+    private int jumpBoost;
 
     public Ball(float x, float y, float radius, float velocity, float gravity, float speed, int color) {
         super(x, y, radius * 2, radius * 2);
@@ -23,6 +24,7 @@ public class Ball extends Sprite {
         this.velocity = velocity;
         this.speed = speed;
         setColor(color);
+        this.jumpBoost = -1;
     }
 
     public void draw(Canvas canvas) {
@@ -37,13 +39,29 @@ public class Ball extends Sprite {
      * Bounce the ball.
      */
     public void bounce() {
-        y-=speed; // Give it some speed up, so it doesn't get stuck.
-        velocity = this.startVelocity; // Reset velocity
+        if (jumpBoost < 0) {
+            jumpBoost = (int)speed; // Give the ball a boost.
+            velocity = this.startVelocity; // Reset velocity
+        }
     }
 
     public void move() {
         this.deltaY = y;
         this.deltaX = x;
+
+        if (jumpBoost >= 0) {
+            int change = 0;
+            if (jumpBoost > ((int)speed / 3) * 2) {
+                change = 4;
+            } else if (jumpBoost > ((int)speed / 3)) {
+                change = 2;
+            } else {
+                change = 1;
+            }
+
+            jumpBoost -= change;
+            y -= change;
+        }
 
         velocity = velocity + gravity;
         y = y - speed + velocity;

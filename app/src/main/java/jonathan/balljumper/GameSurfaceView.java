@@ -113,10 +113,10 @@ public class GameSurfaceView extends SurfaceView implements Runnable {
         ball.move();
 
         // Check if the ball is going too high, if so move the screen with the ball.
-        if (ball.getVelocity() < ball.getSpeed() && ball.getTop() < 1000) {
+        if (ball.getVelocity() < ball.getSpeed() && ball.getTop() < (screenSize.y / 3) * 2) {
             // Move the ball first to set the new velocity and to get the delta values.
             // Reset the ball's Y position.
-            ballHeightLimit = (ball.getDeltaY() * (1f / ((ball.getY() - 150) / 100)));
+            ballHeightLimit = (ball.getDeltaY() * (1f / (Math.max((ball.getY() - 150), 100) / 100)));
             ball.setY(ball.getY() - ballHeightLimit);
             ball.setDeltaY(ball.getDeltaY() - ballHeightLimit);
         }
@@ -127,17 +127,21 @@ public class GameSurfaceView extends SurfaceView implements Runnable {
             // Move the panel at normal speed and reset it if it comes below the screen.
             panelHandler.move(i);
 
+            // When the ball moves upwards too much, move with the ball.
+            if (ballHeightLimit != -1) {
+                panelHandler.move(i, -ballHeightLimit);
+            }
+
             // Bounce if the ball intersects with a panel.
             if (ball.intersects(panel.getX(), panel.getY(), panel.getWidth(), panel.getHeight())) {
                 // Do not bounce if you're above the screen.
                 if (ball.getBottom() > 0) {
                     ball.bounce();
+                    // If the ball is falling.
+                    if (ball.getDeltaY() > 0) {
+                        ball.setY(ball.getY() - (ball.getBottom() - panel.getTop()));
+                    }
                 }
-            }
-
-            // When the ball moves upwards too much, move panels down by the same speed.
-            if (ballHeightLimit != -1) {
-                panelHandler.move(i, -ballHeightLimit);
             }
         }
     }
