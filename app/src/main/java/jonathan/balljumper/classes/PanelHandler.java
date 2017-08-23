@@ -64,7 +64,7 @@ public class PanelHandler {
     public void resetAllPanels() {
         lastPanelIndex = -1;
         for (int i = 0; i < panelList.length; ++i) {
-            panelList[i].setX(screenSize.x - panelList[i].getWidth());
+            panelList[i].setX(random.nextInt(screenSize.x - (int)panelList[i].getWidth()));
             panelList[i].setY(getNewPanelHeight(lastPanelIndex));
         }
     }
