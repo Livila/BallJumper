@@ -115,7 +115,7 @@ public class GameSurfaceView extends SurfaceView implements Runnable {
         }
 
         ball.move();
-        highscoreHandler.addScore(1);
+        highscoreHandler.addHeight(5f);
 
         // Check if the ball is going too high, if so move the screen with the ball.
         if (ball.getVelocity() < ball.getSpeed() && ball.getTop() < (screenSize.y / 3) * 2) {
@@ -126,7 +126,7 @@ public class GameSurfaceView extends SurfaceView implements Runnable {
             ball.setDeltaY(ball.getDeltaY() - ballHeightLimit);
 
             // Give extra score for speeding up.
-            highscoreHandler.addScore((int)(-ballHeightLimit));
+            highscoreHandler.addHeight(-ballHeightLimit);
         }
 
         for (int i = 0; i < panelHandler.getPanelList().length; ++i) {
@@ -231,9 +231,16 @@ public class GameSurfaceView extends SurfaceView implements Runnable {
             gameThread.sleep(1000);
         } catch (InterruptedException e) { }
 
+        highscoreHandler.resetAndSave();
+
         ball.bounce();
         ball.setX(screenSize.x / 2 - ball.getWidth() / 2);
         ball.setY((screenSize.y / 3) * 2 - ball.getWidth() / 2);
+        ball.setDeltaX(0);
+        ball.setDeltaY(0);
+
+        panelHandler.resetAllPanels();
+
         isRunning = true;
     }
 }
