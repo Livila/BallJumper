@@ -11,6 +11,7 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
 import jonathan.balljumper.classes.Ball;
+import jonathan.balljumper.classes.HighscoreHandler;
 import jonathan.balljumper.classes.Panel;
 import jonathan.balljumper.classes.PanelHandler;
 
@@ -27,6 +28,7 @@ public class GameSurfaceView extends SurfaceView implements Runnable {
 
     private Ball ball;
     private PanelHandler panelHandler;
+    private HighscoreHandler highscoreHandler;
 
     private final static int MAX_FPS = 40;
     private final static int FRAME_PERIOD = 1000 / MAX_FPS;
@@ -69,6 +71,8 @@ public class GameSurfaceView extends SurfaceView implements Runnable {
 
         // Initialize panelHandler.
         panelHandler = new PanelHandler(10, 150, 20, 5f, screenSize);
+
+        highscoreHandler = new HighscoreHandler();
     }
 
     /**
@@ -111,6 +115,7 @@ public class GameSurfaceView extends SurfaceView implements Runnable {
         }
 
         ball.move();
+        highscoreHandler.addScore(1);
 
         // Check if the ball is going too high, if so move the screen with the ball.
         if (ball.getVelocity() < ball.getSpeed() && ball.getTop() < (screenSize.y / 3) * 2) {
@@ -119,6 +124,9 @@ public class GameSurfaceView extends SurfaceView implements Runnable {
             ballHeightLimit = (ball.getDeltaY() * (1f / (Math.max((ball.getY() - 150), 100) / 100)));
             ball.setY(ball.getY() - ballHeightLimit);
             ball.setDeltaY(ball.getDeltaY() - ballHeightLimit);
+
+            // Give extra score for speeding up.
+            highscoreHandler.addScore((int)(-ballHeightLimit));
         }
 
         for (int i = 0; i < panelHandler.getPanelList().length; ++i) {
@@ -154,11 +162,14 @@ public class GameSurfaceView extends SurfaceView implements Runnable {
         // Reset background
         canvas.drawColor(Color.GREEN);
 
+        // Render panels
+        panelHandler.draw(canvas);
+
         // Render ball
         ball.draw(canvas);
 
-        // Render panels
-        panelHandler.draw(canvas);
+        // Render score and highscore.
+        highscoreHandler.draw(canvas);
     }
 
     @Override
