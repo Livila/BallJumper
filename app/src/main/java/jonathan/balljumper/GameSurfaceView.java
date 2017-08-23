@@ -29,6 +29,7 @@ public class GameSurfaceView extends SurfaceView implements Runnable {
     private Ball ball;
     private PanelHandler panelHandler;
     private HighscoreHandler highscoreHandler;
+    private SoundController soundController;
 
     private final static int MAX_FPS = 40;
     private final static int FRAME_PERIOD = 1000 / MAX_FPS;
@@ -59,6 +60,8 @@ public class GameSurfaceView extends SurfaceView implements Runnable {
             }
         });
 
+        this.soundController = new SoundController(context);
+
         // Initialize ball.
         int ballRadius = 35;
         ball = new Ball(screenSize.x / 2 - ballRadius,
@@ -67,7 +70,9 @@ public class GameSurfaceView extends SurfaceView implements Runnable {
                         0.2f, // Velocity
                         0.5f, // Gravity
                         17f, // Speed
-                        Color.argb(255, 200, 34, 34));
+                        Color.argb(255, 200, 34, 34),
+                        soundController
+        );
 
         // Initialize panelHandler.
         panelHandler = new PanelHandler(10, 150, 20, 5f, screenSize);
