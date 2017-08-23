@@ -54,7 +54,7 @@ public class PanelHandler {
         if (index == -1) {
             newPanelHeight = panelFirstPosition;
         } else {
-            float diff = (random.nextInt(screenSize.y / 5) + 250);
+            float diff = (random.nextInt(screenSize.y / 5) + 235);
             newPanelHeight = panelList[index].getY() - diff;
         }
 
