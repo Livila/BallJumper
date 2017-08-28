@@ -14,6 +14,7 @@ import jonathan.balljumper.classes.HighscoreHandler;
 import jonathan.balljumper.classes.Panel;
 import jonathan.balljumper.classes.PanelHandler;
 import jonathan.balljumper.classes.SoundController;
+import jonathan.balljumper.enums.GameState;
 
 /**
  * Created by Jonathan on 27/07/2017.
@@ -23,6 +24,7 @@ public class GameSurfaceView extends SurfaceView implements Runnable {
     private boolean isRunning = false;
     private Thread gameThread;
     private final SurfaceHolder holder;
+    private GameState gameState;
 
     private final static Point screenSize = new Point();
     public static Point getScreenSize() { return screenSize; }
@@ -82,31 +84,8 @@ public class GameSurfaceView extends SurfaceView implements Runnable {
         panelHandler = new PanelHandler(10, 150, 20, 5f);
 
         highscoreHandler = new HighscoreHandler();
-    }
 
-    /**
-     * Start or resume the game.
-     */
-    public void resume() {
-        isRunning = true;
-        gameThread = new Thread(this);
-        gameThread.start();
-    }
-
-    /**
-     * Pause the game loop
-     */
-    public void pause() {
-        isRunning = false;
-        boolean retry = true;
-        while (retry) {
-            try {
-                gameThread.join();
-                retry = false;
-            } catch (InterruptedException e) {
-                // Try shutting down the thread again.
-            }
-        }
+        gameState = GameState.Running;
     }
 
     /**
@@ -134,7 +113,7 @@ public class GameSurfaceView extends SurfaceView implements Runnable {
             ball.setY(ball.getY() - ballHeightLimit);
             ball.setDeltaY(ball.getDeltaY() - ballHeightLimit);
 
-            // Give extra score for speeding up.
+            // If you fly up faster, add the extra height.
             highscoreHandler.addHeight(-ballHeightLimit);
         }
 
@@ -149,16 +128,17 @@ public class GameSurfaceView extends SurfaceView implements Runnable {
                 panelHandler.move(i, -ballHeightLimit);
             }
 
+            // Don't jump if you recently jumped.
             if (!ball.getHasJumped()) {
                 // Bounce if the ball intersects with a panel.
                 if (ball.intersects(panel.getX(), panel.getY(), panel.getWidth(), panel.getHeight())) {
                     // Do not bounce if you're above the screen.
                     if (ball.getBottom() > 0) {
-                        soundController.playBounce();
                         ball.bounce();
+                        soundController.playBounce();
                         highscoreHandler.addBounce();
 
-                        // If the ball is falling.
+                        // If the ball is falling. TODO
                         if (ball.getDeltaY() > 0) {
                             ball.setY(ball.getY() - (ball.getBottom() - panel.getTop()));
                         }
@@ -166,6 +146,8 @@ public class GameSurfaceView extends SurfaceView implements Runnable {
                 }
             }
         }
+
+        highscoreHandler.update();
     }
 
     /**
@@ -182,21 +164,28 @@ public class GameSurfaceView extends SurfaceView implements Runnable {
         // Render ball
         ball.draw(canvas);
 
-        // Render score and highscore.
-        highscoreHandler.draw(canvas);
+        if (gameState == GameState.Running) {
+            // Render score in-game.
+            highscoreHandler.draw(canvas);
+        } else if (gameState == GameState.GameOver) {
+            highscoreHandler.drawScore(canvas);
+        }
+
     }
 
     @Override
     public void run() {
         while(isRunning) {
-            // Make sure the surface is ready
+            // Make sure the surface is ready.
             if (! holder.getSurface().isValid()) {
                 continue;
             }
             long started = System.currentTimeMillis();
 
-            // Update objects.
-            update();
+            // Update all objects when running the game.
+            if (gameState == GameState.Running) {
+                update();
+            }
 
             // Render objects to screen.
             Canvas canvas = holder.lockCanvas();
@@ -216,7 +205,9 @@ public class GameSurfaceView extends SurfaceView implements Runnable {
                 }
             }
             while (sleepTime < 0) {
-                update();
+                if (gameState == GameState.Running) {
+                    update();
+                }
                 sleepTime += FRAME_PERIOD;
             }
         }
@@ -229,51 +220,63 @@ public class GameSurfaceView extends SurfaceView implements Runnable {
         float x = event.getX();
         float y = event.getY();
 
-        switch (event.getAction()) {
-            case MotionEvent.ACTION_MOVE:
+        if (gameState == GameState.Running) {
+            switch (event.getAction()) {
+                case MotionEvent.ACTION_MOVE:
 
-                // Calculate delta x and y.
-                touchMoveDeltaX = event.getX() - touchMoveDeltaX;
-                touchMoveDeltaY = event.getY() - touchMoveDeltaY;
+                    // Calculate delta x and y.
+                    touchMoveDeltaX = event.getX() - touchMoveDeltaX;
+                    touchMoveDeltaY = event.getY() - touchMoveDeltaY;
 
-                // Skip first time you press down.
-                if (!isTouchDown) {
-                    isTouchDown = true;
-                } else {
-                    // Correct delta here.
+                    // Skip first time you press down.
+                    if (!isTouchDown) {
+                        isTouchDown = true;
+                    } else {
+                        // Correct delta here.
 
-                    // Move the ball as you move the finger.
-                    ball.setX(ball.getX() + touchMoveDeltaX * 1.5f);
-                }
+                        // Move the ball as you move the finger.
+                        ball.setX(ball.getX() + touchMoveDeltaX * 1.5f);
+                    }
 
-                touchMoveDeltaX = event.getX();
-                touchMoveDeltaY = event.getY();
+                    touchMoveDeltaX = event.getX();
+                    touchMoveDeltaY = event.getY();
 
-                break;
-            case MotionEvent.ACTION_DOWN:
-                touchStartTime = System.currentTimeMillis();
-                break;
+                    break;
+                case MotionEvent.ACTION_DOWN:
+                    touchStartTime = System.currentTimeMillis();
+                    break;
 
-            case MotionEvent.ACTION_UP:
-                // If you quickly press with your finger, move the ball to that position.
-                if ((System.currentTimeMillis() - touchStartTime) < 125) {
-                    ball.setX(event.getX());
-                }
-                touchStartTime = 0;
-                isTouchDown = false;
-                break;
+                case MotionEvent.ACTION_UP:
+                    // If you quickly press with your finger, move the ball to that position.
+                    if ((System.currentTimeMillis() - touchStartTime) < 125) {
+                        ball.setX(event.getX());
+                    }
+                    touchStartTime = 0;
+                    isTouchDown = false;
+                    break;
+            }
+        } else if (gameState == GameState.GameOver) {
+            switch (event.getAction()) {
+                case MotionEvent.ACTION_MOVE:
+                    break;
+                case MotionEvent.ACTION_DOWN:
+                    gameState = GameState.Running;
+                    resetGame();
+                    ball.setX(x);
+                    break;
+                case MotionEvent.ACTION_UP:
+                    break;
+            }
         }
 
         return true;
     }
 
     public void lose() {
-        isRunning = false;
+        gameState = GameState.GameOver; // Show the highscore screen.
+    }
 
-        try {
-            gameThread.sleep(1000);
-        } catch (InterruptedException e) { }
-
+    public void resetGame() {
         highscoreHandler.resetAndSave();
 
         ball.bounce();
@@ -283,7 +286,30 @@ public class GameSurfaceView extends SurfaceView implements Runnable {
         ball.setDeltaY(0);
 
         panelHandler.resetAllPanels();
+    }
 
+    /**
+     * Start or resume the game.
+     */
+    public void resume() {
         isRunning = true;
+        gameThread = new Thread(this);
+        gameThread.start();
+    }
+
+    /**
+     * Pause the game loop.
+     */
+    public void pause() {
+        isRunning = false;
+        boolean retry = true;
+        while (retry) {
+            try {
+                gameThread.join();
+                retry = false;
+            } catch (InterruptedException e) {
+                // Try shutting down the thread again.
+            }
+        }
     }
 }

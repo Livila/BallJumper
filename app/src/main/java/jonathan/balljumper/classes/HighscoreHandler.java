@@ -6,6 +6,8 @@ import android.graphics.Paint;
 
 import java.util.Locale;
 
+import jonathan.balljumper.GameSurfaceView;
+
 /**
  * Created by Jonathan on 23/08/2017.
  */
@@ -13,9 +15,12 @@ import java.util.Locale;
 public class HighscoreHandler {
     private final Paint paint;
 
+    private String[] highscoreText;
+
     private int currentBounces; // Keeps track of how many times you have bounced.
     private float currentHeight; // Keeps track of how far you've gotten.
-    private long startTime; // Keeps track of the time you've played.
+    private long startTime; // Keeps track of when you started playing a game.
+    private long currentTime; // Keeps track of how long you have played.
 
     public HighscoreHandler() {
         paint = new Paint();
@@ -23,22 +28,51 @@ public class HighscoreHandler {
         paint.setTextSize(25);
 
         startTime = System.currentTimeMillis();
+        currentTime = System.currentTimeMillis();
     }
 
-    public final void draw(Canvas canvas) {
-        String[] text = {
+    public void update() {
+        currentTime = (System.currentTimeMillis() - startTime) / 1000;
+
+        highscoreText = new String[] {
                 String.format(Locale.ENGLISH, "Height: %d meters", (int) (currentHeight / 10)),
                 String.format(Locale.ENGLISH, "Bounces: %d", (currentBounces)),
                 String.format(Locale.ENGLISH, "Time: %s", getTimePlayed()),
         };
+    }
 
-        for (int i = 0; i < text.length; ++i) {
-            canvas.drawText(text[i], 7, 30 + 26 * i, paint);
+    public final void draw(Canvas canvas) {
+        for (int i = 0; i < highscoreText.length; ++i) {
+            canvas.drawText(highscoreText[i], 7, 30 + 26 * i, paint);
+        }
+    }
+
+    public final void drawScore(Canvas canvas) {
+        Paint paint = new Paint(this.paint);
+        paint.setTextSize(50f);
+        paint.setColor(Color.WHITE);
+
+        Paint backgroundPaint = new Paint();
+        backgroundPaint.setColor(Color.BLACK);
+        backgroundPaint.setAlpha(100);
+
+        canvas.drawRect(
+                35,
+                GameSurfaceView.getScreenSize().y / 2 - (paint.getTextSize() * highscoreText.length) / 2 - paint.getTextSize() / 2 - 5,
+                GameSurfaceView.getScreenSize().x - 35,
+                GameSurfaceView.getScreenSize().y / 2 + (paint.getTextSize() * highscoreText.length) / 2 - 5,
+                backgroundPaint);
+
+        for (int i = 0; i < highscoreText.length; ++i) {
+            canvas.drawText(
+                    highscoreText[i],
+                    50,
+                    GameSurfaceView.getScreenSize().y / 2 - (paint.getTextSize() * highscoreText.length) / 2 + paint.getTextSize() / 2 + paint.getTextSize() * i,
+                    paint);
         }
     }
 
     private String getTimePlayed() {
-        long currentTime = (System.currentTimeMillis() - startTime) / 1000;
         int s = ((int)(currentTime % 60));
         int m = ((int)(currentTime / 60 % 60));
         int h = ((int)(currentTime / 60 / 60 % 60));
@@ -56,6 +90,7 @@ public class HighscoreHandler {
         currentHeight = 0;
         currentBounces = 0;
         startTime = System.currentTimeMillis();
+        currentTime = System.currentTimeMillis();
     }
 
     public void addHeight(float height) {
