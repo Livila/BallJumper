@@ -85,7 +85,7 @@ public class GameSurfaceView extends SurfaceView implements Runnable {
 
         highscoreHandler = new HighscoreHandler();
 
-        gameState = GameState.GameOver;
+        gameState = GameState.Highscore;
     }
 
     /**
@@ -163,19 +163,27 @@ public class GameSurfaceView extends SurfaceView implements Runnable {
         // Reset background
         canvas.drawColor(Color.GREEN);
 
-        // Render panels
-        panelHandler.draw(canvas);
+        // Render panels and the ball in the background.
+        if (gameState != GameState.Highscore) {
+            // Render panels
+            panelHandler.draw(canvas);
 
-        // Render ball
-        ball.draw(canvas);
-
-        if (gameState == GameState.Running) {
-            // Render score in-game.
-            highscoreHandler.drawScoreInGame(canvas);
-        } else if (gameState == GameState.GameOver) {
-            highscoreHandler.drawScoreFinal(canvas);
+            // Render ball
+            ball.draw(canvas);
         }
 
+        switch (gameState) {
+            case Running:
+                // Render score in-game.
+                highscoreHandler.drawScoreInGame(canvas);
+                break;
+            case GameOver:
+                highscoreHandler.drawScoreFinal(canvas);
+                break;
+            case Highscore:
+                highscoreHandler.drawHighscore(canvas);
+                break;
+        }
     }
 
     @Override
@@ -225,53 +233,56 @@ public class GameSurfaceView extends SurfaceView implements Runnable {
         float x = event.getX();
         float y = event.getY();
 
-        if (gameState == GameState.Running) {
-            switch (event.getAction()) {
-                case MotionEvent.ACTION_MOVE:
+        switch (gameState) {
+            case Running:
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_MOVE:
 
-                    // Calculate delta x and y.
-                    touchMoveDeltaX = event.getX() - touchMoveDeltaX;
-                    touchMoveDeltaY = event.getY() - touchMoveDeltaY;
+                        // Calculate delta x and y.
+                        touchMoveDeltaX = event.getX() - touchMoveDeltaX;
+                        touchMoveDeltaY = event.getY() - touchMoveDeltaY;
 
-                    // Skip first time you press down.
-                    if (!isTouchDown) {
-                        isTouchDown = true;
-                    } else {
-                        // Correct delta here.
+                        // Skip first time you press down.
+                        if (!isTouchDown) {
+                            isTouchDown = true;
+                        } else {
+                            // Correct delta here.
 
-                        // Move the ball as you move the finger.
-                        ball.setX(ball.getX() + touchMoveDeltaX * 1.5f);
-                    }
+                            // Move the ball as you move the finger.
+                            ball.setX(ball.getX() + touchMoveDeltaX * 1.5f);
+                        }
 
-                    touchMoveDeltaX = event.getX();
-                    touchMoveDeltaY = event.getY();
+                        touchMoveDeltaX = event.getX();
+                        touchMoveDeltaY = event.getY();
 
-                    break;
-                case MotionEvent.ACTION_DOWN:
-                    touchStartTime = System.currentTimeMillis();
-                    break;
+                        break;
+                    case MotionEvent.ACTION_DOWN:
+                        touchStartTime = System.currentTimeMillis();
+                        break;
 
-                case MotionEvent.ACTION_UP:
-                    // If you quickly press with your finger, move the ball to that position.
-                    if ((System.currentTimeMillis() - touchStartTime) < 125) {
-                        ball.setX(event.getX());
-                    }
-                    touchStartTime = 0;
-                    isTouchDown = false;
-                    break;
-            }
-        } else if (gameState == GameState.GameOver) {
-            switch (event.getAction()) {
-                case MotionEvent.ACTION_MOVE:
-                    break;
-                case MotionEvent.ACTION_DOWN:
+                    case MotionEvent.ACTION_UP:
+                        // If you quickly press with your finger, move the ball to that position.
+                        if ((System.currentTimeMillis() - touchStartTime) < 125) {
+                            ball.setX(event.getX());
+                        }
+                        touchStartTime = 0;
+                        isTouchDown = false;
+                        break;
+                }
+                break;
+            case GameOver:
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    gameState = GameState.Highscore;
+                    highscoreHandler.highscoreUpdate();
+                }
+                break;
+            case Highscore:
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
                     gameState = GameState.Running;
                     resetGame();
                     ball.setX(x);
-                    break;
-                case MotionEvent.ACTION_UP:
-                    break;
-            }
+                }
+                break;
         }
 
         return true;

@@ -31,6 +31,7 @@ public class HighscoreHandler {
 
         reset();
         update();
+        highscoreUpdate();
     }
 
     public void update() {
@@ -105,6 +106,13 @@ public class HighscoreHandler {
         }
     }
 
+    public final void drawHighscore(Canvas canvas) {
+        Paint paint = new Paint(this.paint);
+        paint.setTextSize(50f);
+
+        canvas.drawText("Highscore", 50, 100, paint);
+    }
+
     private String getTimePlayed() {
         int s = ((int)(currentTime % 60));
         int m = ((int)(currentTime / 60 % 60));
@@ -118,10 +126,22 @@ public class HighscoreHandler {
     }
 
     public void resetAndSave() {
-        // TODO: Save function.
+        highscoreSave();
 
         reset();
         update();
+    }
+
+    public final void highscoreUpdate() {
+        highscoreLoad();
+    }
+
+    public final void highscoreSave() {
+        // Check if there is a new highscore, if so then save.
+    }
+
+    public final void highscoreLoad() {
+        // Load highscore from disk.
     }
 
     public void reset() {
