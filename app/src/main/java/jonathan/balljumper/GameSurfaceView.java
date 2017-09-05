@@ -85,7 +85,7 @@ public class GameSurfaceView extends SurfaceView implements Runnable {
 
         highscoreHandler = new HighscoreHandler();
 
-        gameState = GameState.Running;
+        gameState = GameState.GameOver;
     }
 
     /**
@@ -104,6 +104,7 @@ public class GameSurfaceView extends SurfaceView implements Runnable {
 
         ball.move();
         highscoreHandler.addHeight(panelHandler.getPanelSpeed());
+        highscoreHandler.addScore(1);
 
         // Check if the ball is going too high, if so move the screen with the ball.
         if (ball.getVelocity() < ball.getSpeed() && ball.getTop() < (screenSize.y / 3) * 2) {
@@ -115,6 +116,10 @@ public class GameSurfaceView extends SurfaceView implements Runnable {
 
             // If you fly up faster, add the extra height.
             highscoreHandler.addHeight(-ballHeightLimit);
+
+            // Give normal score and some extra score for speeding up the game.
+            // -ballHeightLimit: The normal score added for gaining height.
+            highscoreHandler.addScore((-ballHeightLimit * 1.25f) / panelHandler.getPanelSpeed());
         }
 
         for (int i = 0; i < panelHandler.getPanelList().length; ++i) {
@@ -166,9 +171,9 @@ public class GameSurfaceView extends SurfaceView implements Runnable {
 
         if (gameState == GameState.Running) {
             // Render score in-game.
-            highscoreHandler.draw(canvas);
+            highscoreHandler.drawScoreInGame(canvas);
         } else if (gameState == GameState.GameOver) {
-            highscoreHandler.drawScore(canvas);
+            highscoreHandler.drawScoreFinal(canvas);
         }
 
     }
