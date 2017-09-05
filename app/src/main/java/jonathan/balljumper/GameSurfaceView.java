@@ -163,21 +163,22 @@ public class GameSurfaceView extends SurfaceView implements Runnable {
         // Reset background
         canvas.drawColor(Color.GREEN);
 
-        // Render panels and the ball in the background.
-        if (gameState != GameState.Highscore) {
-            // Render panels
-            panelHandler.draw(canvas);
-
-            // Render ball
-            ball.draw(canvas);
-        }
-
         switch (gameState) {
             case Running:
+                // Render panels
+                panelHandler.draw(canvas);
+
+                // Render ball
+                ball.draw(canvas);
+
                 // Render score in-game.
                 highscoreHandler.drawScoreInGame(canvas);
                 break;
             case GameOver:
+                // Render the panels and the ball in the background.
+                panelHandler.draw(canvas);
+                ball.draw(canvas);
+                // Render the final score.
                 highscoreHandler.drawScoreFinal(canvas);
                 break;
             case Highscore:
@@ -280,7 +281,7 @@ public class GameSurfaceView extends SurfaceView implements Runnable {
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
                     gameState = GameState.Running;
                     resetGame();
-                    ball.setX(x);
+                    ball.setX(x); // Move ball to where your finger points.
                 }
                 break;
         }
@@ -293,7 +294,7 @@ public class GameSurfaceView extends SurfaceView implements Runnable {
     }
 
     public void resetGame() {
-        highscoreHandler.resetAndSave();
+        highscoreHandler.saveThenReset();
 
         ball.bounce();
         ball.setX(screenSize.x / 2 - ball.getWidth() / 2);
